@@ -83,8 +83,9 @@ ISR(SPI_STC_vect){
 	SPI_DISABLE;
 
 	if(command_in_read == 1){
-		command_response_count--;
-		if(command_response_count == 0){
+		if(command_response_count > 0)
+			command_response_count--;
+		if(command_response_count <= 0){
 			command_in_read = 0;
 			command_counter++;
 			if(command_counter >= command_count){
