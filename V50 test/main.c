@@ -9,12 +9,9 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-#include <stdbool.h>
 #include <common_io.h>
 #include <SPI.h>
-#include <avr/eeprom.h>
 #include "USART.h"
-#include "eeprom.h"
 #include "Commands.h"
 
 #define ACC_ON PINC1
@@ -27,7 +24,7 @@
 #define MTS_HIGH SETBIT(PORTB, MTS);
 
 volatile unsigned char command_counter = 0;
-volatile unsigned char command_count = 13;
+volatile unsigned char command_count = 23;
 volatile unsigned char command_response_count = 0;
 volatile unsigned char command_value = 0;
 volatile unsigned char command_in_read = 0;
@@ -35,7 +32,78 @@ volatile unsigned char command_in_read = 0;
 //przerwanie defaultowe na wypadek pozostawienia 
 //niebos³u¿onych przerwañ, aby siê procek nie resetowa³
 ISR(__vector_default){
+USART_SendByte(0x00);
+}
 
+ISR(WDT_vect){
+USART_SendByte(0x01);
+}
+
+ISR(EE_READY_vect){
+USART_SendByte(0x02);
+}
+
+ISR(SPM_READY_vect){
+USART_SendByte(0x03);
+}
+
+ISR(PCINT0_vect){
+USART_SendByte(0x04);
+}
+
+ISR(PCINT1_vect){
+USART_SendByte(0x05);
+}
+
+ISR(PCINT2_vect){
+USART_SendByte(0x06);
+}
+
+ISR(TIMER2_COMPA_vect){
+USART_SendByte(0x07);
+}
+
+ISR(TIMER2_COMPB_vect){
+USART_SendByte(0x08);
+}
+
+ISR(TIMER2_OVF_vect){
+USART_SendByte(0x09);
+}
+
+ISR(TIMER1_CAPT_vect){
+USART_SendByte(0x0a);
+}
+
+ISR(TIMER1_COMPA_vect){
+USART_SendByte(0x0b);
+}
+ISR(TIMER1_COMPB_vect){
+USART_SendByte(0x0c);
+}
+ISR(TIMER1_OVF_vect){
+USART_SendByte(0x0d);
+}
+ISR(TIMER0_COMPA_vect){
+USART_SendByte(0x0e);
+}
+ISR(TIMER0_OVF_vect){
+USART_SendByte(0x0f);
+}
+ISR(TIMER0_COMPB_vect){
+USART_SendByte(0x10);
+}
+
+ISR(ADC_vect){
+USART_SendByte(0x11);
+}
+
+ISR(ANALOG_COMP_vect){
+USART_SendByte(0x12);
+}
+
+ISR(TWI_vect){
+USART_SendByte(0x13);
 }
 
 //zewnetrzne przerwanie INT0
@@ -48,9 +116,9 @@ ISR(INT0_vect){
 		command_in_read = 1;
 	}
 	else{
-		SETBIT(PORTB, SPI_MISO_PIN);
-		_delay_us(10);
-		CLEARBIT(PORTB, SPI_MISO_PIN);
+		//SETBIT(PORTB, SPI_MISO_PIN);
+		//_delay_us(10);
+		//CLEARBIT(PORTB, SPI_MISO_PIN);
 		command_value = CMD_SLAVE_ACK;
 	}
 
@@ -58,6 +126,7 @@ ISR(INT0_vect){
 
 	_delay_us(28);
 
+	SETBIT(PORTB, SPI_MISO_PIN);
 	SPI_ENABLE;
 
 	SPI_INT_ENABLE;
@@ -77,11 +146,11 @@ ISR(SPI_STC_vect){
 
 	SPI_INT_DISABLE;
 
-	_delay_us(25);
+	_delay_us(5);
 
-	
 	SPI_DISABLE;
-
+	CLEARBIT(PORTB, SPI_MISO_PIN);
+	MTS_HIGH;
 	if(command_in_read == 1){
 		if(command_response_count > 0)
 			command_response_count--;
@@ -89,29 +158,30 @@ ISR(SPI_STC_vect){
 			command_in_read = 0;
 			command_counter++;
 			if(command_counter < command_count){
-				MTS_HIGH;
-				_delay_ms(1);
+				if(ALL_COMMANDS[command_counter - 1].SLength == 0)
+					_delay_ms(1);
+				else
+					_delay_ms(16);
 				MTS_LOW;
 			}
 		}
-		else{
-			MTS_HIGH;
-		}
+		//else{
+			//MTS_HIGH;
+		//}
 	}
-	USART_SendByte(command_response_count);
 }
 
 //przerwanie odbioru bajtu na USART
 ISR(USART_RX_vect){
-
+USART_SendByte(0x14);
 }
 //przerwanie gotowoœci USART ?
 ISR(USART_UDRE_vect){
-
+USART_SendByte(0x15);
 }
 //przerwanie wys³ania bajtu przez USART
 ISR(USART_TX_vect){
-
+USART_SendByte(0x16);
 }
 
 int main(void)

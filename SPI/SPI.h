@@ -10,10 +10,10 @@
 #define SPI_H_
 
 #define SPI_PORT DDRB
-#define SPI_MOSI_PIN PB3
-#define SPI_MISO_PIN PB4
-#define SPI_SS_PIN PB0
-#define SPI_CLK_PIN PB5
+#define SPI_MOSI_PIN PINB3
+#define SPI_MISO_PIN PINB4
+#define SPI_SS_PIN PINB0
+#define SPI_CLK_PIN PINB5
 #define MSB 0
 #define LSB 1
 #define SPI_BYTE_ORDER LSB

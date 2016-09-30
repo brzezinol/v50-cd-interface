@@ -21,7 +21,7 @@ void SPI_InitMaster(void){
 }
 
 void SPI_InitSlave(void){
-	SET_PINPORT_AS_OUT(DDRB, PINB4); //MISO as OUTPUT
+	SET_PINPORT_AS_OUT(DDRB, SPI_MISO_PIN); //MISO as OUTPUT
 	SPCR = (1<<SPIE)|(0<<MSTR)|(SPI_BYTE_ORDER<<DORD)|(1<<CPOL)|(1<<CPHA);   
 	//Enable SPI
 }

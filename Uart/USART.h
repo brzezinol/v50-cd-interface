@@ -14,13 +14,13 @@
 #endif
 
 #ifndef USART_BAUDRATE
-#define USART_BAUDRATE 19200
+#define USART_BAUDRATE 250000
 #endif
 
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 
 #ifndef USART_USEINTERRUPT
-#define USART_USEINTERRUPT 1
+#define USART_USEINTERRUPT 0
 #endif
 
 #define TXT_CR 0x0D

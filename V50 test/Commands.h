@@ -4,7 +4,6 @@
  * Created: 2016-09-28 09:49:17
  *  Author: pbrzezinski
  */ 
-#include <avr/pgmspace.h>
 
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
@@ -54,7 +53,7 @@ typedef struct sCMD_INFO{
 } sCMD_INFO;
 
 sCMD_INFO ALL_COMMANDS [] = { 
-	{   CMD_SLAVE_ACK, 10 },
+	{   CMD_SLAVE_ACK, 20 },
 	{	CMD_INIT_1, 0	},
 	{	CMD_INIT_2, 0	},
 	{	CMD_INIT_3, 0	},
@@ -66,7 +65,17 @@ sCMD_INFO ALL_COMMANDS [] = {
 	{	CMD_UNKNOWN_N, 6	},
 	{	CMD_UNKNOWN_AD, 8	},
 	{	CMD_STATUS, 10	},
-	{	MSG_PLAY_MSG, 10	}
+	{	MSG_PLAY_MSG, 10	},
+	{	CMD_STATUS, 10	},
+	{	CMD_STATUS, 10	},
+	{	CMD_STATUS, 10	},
+	{	CMD_STATUS, 10	},
+	{	CMD_STATUS, 10	},
+	{	CMD_STATUS, 10	},
+	{	CMD_STATUS, 10	},
+	{	CMD_STATUS, 10	},
+	{	CMD_STATUS, 10	},
+	{	CMD_STATUS, 10	}
 };
 
 #endif /* COMMANDS_H_ */
